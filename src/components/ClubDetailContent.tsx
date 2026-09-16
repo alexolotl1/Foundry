@@ -9,22 +9,12 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import EventOutlinedIcon from "@mui/icons-material/EventOutlined";
 import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
 import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
-import type { Club, Weekday } from "@/types/club";
+import type { Club } from "@/types/club";
 import ClubLogo from "./ClubLogo";
 import TagChip from "./TagChip";
 import CommitmentIndicator from "./CommitmentIndicator";
 import MeetingDaysRow from "./MeetingDaysRow";
 import ClubLinksRow from "./ClubLinksRow";
-
-const DAY_NAMES: Record<Weekday, string> = {
-  Sun: "Sunday",
-  Mon: "Monday",
-  Tue: "Tuesday",
-  Wed: "Wednesday",
-  Thu: "Thursday",
-  Fri: "Friday",
-  Sat: "Saturday",
-};
 
 const COMMITMENT_COPY: Record<Club["commitmentLevel"], string> = {
   low: "Drop in when you can — attendance isn't tracked closely.",
@@ -50,7 +40,7 @@ export default function ClubDetailContent({ club }: { club: Club }) {
   return (
     <div className="flex flex-col">
       <div className="mx-auto w-full max-w-[1120px] px-6 pt-8 sm:px-8">
-        <div className="flex flex-wrap items-start justify-between gap-6">
+        <div className="flex flex-wrap items-start justify-between gap-8">
           <div className="flex items-start gap-5">
             <motion.div
               initial={{ opacity: 0, scale: 0.92 }}
@@ -80,34 +70,34 @@ export default function ClubDetailContent({ club }: { club: Club }) {
         </div>
 
         <div
-          className="mt-6 flex flex-wrap items-center gap-x-10 gap-y-4 border-y py-4"
+          className="mt-7 flex flex-wrap items-center gap-x-12 gap-y-5 border-y py-5"
           style={{ borderColor: "var(--border)" }}
         >
-          <div className="flex items-center gap-2.5">
-            <CalendarMonthOutlinedIcon sx={{ fontSize: 19, color: "var(--gold)" }} />
-            <div className="flex flex-col gap-1.5">
-              <span className="text-[0.75rem]" style={{ color: "var(--text-faint)" }}>
+          <div className="flex items-center gap-3">
+            <CalendarMonthOutlinedIcon sx={{ fontSize: 26, color: "var(--gold)" }} />
+            <div className="flex flex-col gap-2">
+              <span className="text-[0.8125rem]" style={{ color: "var(--text-faint)" }}>
                 Meets
               </span>
-              <MeetingDaysRow days={club.meetingDays} />
+              <MeetingDaysRow days={club.meetingDays} size="lg" />
             </div>
           </div>
-          <div className="flex items-center gap-2.5">
-            <SpeedOutlinedIcon sx={{ fontSize: 19, color: "var(--gold)" }} />
-            <div className="flex flex-col gap-1.5">
-              <span className="text-[0.75rem]" style={{ color: "var(--text-faint)" }}>
+          <div className="flex items-center gap-3">
+            <SpeedOutlinedIcon sx={{ fontSize: 26, color: "var(--gold)" }} />
+            <div className="flex flex-col gap-2">
+              <span className="text-[0.8125rem]" style={{ color: "var(--text-faint)" }}>
                 Commitment
               </span>
-              <CommitmentIndicator level={club.commitmentLevel} />
+              <CommitmentIndicator level={club.commitmentLevel} size="lg" />
             </div>
           </div>
-          <div className="flex items-center gap-2.5">
-            <PlaceOutlinedIcon sx={{ fontSize: 19, color: "var(--gold)" }} />
-            <div className="flex flex-col gap-1.5">
-              <span className="text-[0.75rem]" style={{ color: "var(--text-faint)" }}>
+          <div className="flex items-center gap-3">
+            <PlaceOutlinedIcon sx={{ fontSize: 26, color: "var(--gold)" }} />
+            <div className="flex flex-col gap-2">
+              <span className="text-[0.8125rem]" style={{ color: "var(--text-faint)" }}>
                 Room
               </span>
-              <span className="text-[0.9375rem]" style={{ color: "var(--text)" }}>
+              <span className="text-[1.0625rem]" style={{ color: "var(--text)" }}>
                 {club.room}
               </span>
             </div>
@@ -135,7 +125,7 @@ export default function ClubDetailContent({ club }: { club: Club }) {
                     Days
                   </dt>
                   <dd className="mt-1 text-[0.9375rem]" style={{ color: "var(--text)" }}>
-                    {club.meetingDays.map((d) => DAY_NAMES[d]).join(", ")}
+                    {club.meetingDays.join(", ")}
                   </dd>
                 </div>
                 <div>

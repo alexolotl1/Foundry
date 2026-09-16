@@ -14,6 +14,10 @@
   --gold-soft: #8c723f;
   --gold-contrast: #14100a;
 
+  --status-low: #4fa66b;
+  --status-medium: #d9973d;
+  --status-high: #cf5a4c;
+
   --font-display: var(--font-fraunces);
   --font-body: var(--font-public-sans);
 }

@@ -7,25 +7,26 @@ import ClubLogo from "./ClubLogo";
 import TagChip from "./TagChip";
 import CommitmentIndicator from "./CommitmentIndicator";
 import MeetingDaysRow from "./MeetingDaysRow";
+import { truncateText } from "@/lib/truncate";
 
 export default function ClubCard({ club }: { club: Club }) {
   return (
     <Link
-      href={`/activities/${club.slug}`}
+      href={`/activities/${club.id}`}
       className="block h-full no-underline"
       aria-label={`View details for ${club.name}`}
     >
       <motion.article
         whileHover={{ y: -3 }}
         transition={{ duration: 0.15, ease: "easeOut" }}
-        className="flex h-full flex-col gap-4 rounded-[4px] p-4 transition-colors duration-150 hover:border-[var(--gold)]"
+        className="flex h-full flex-col gap-5 rounded-[4px] p-5 transition-colors duration-150 hover:border-[var(--gold)]"
         style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
       >
-        <div className="flex items-start gap-4">
+        <div className="flex items-start gap-5">
           <motion.div
             whileHover={{ scale: 1.04 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="h-[72px] w-[72px] shrink-0 overflow-hidden rounded-[4px]"
+            className="h-[108px] w-[108px] shrink-0 overflow-hidden rounded-[4px]"
             style={{ border: "1px solid var(--border)" }}
           >
             <ClubLogo club={club} />
@@ -33,26 +34,26 @@ export default function ClubCard({ club }: { club: Club }) {
 
           <div className="min-w-0 flex-1">
             <h3
-              className="text-[1.25rem] leading-snug font-semibold"
+              className="text-[1.5rem] leading-snug font-semibold"
               style={{ fontFamily: "var(--font-display)", color: "var(--text)" }}
             >
               {club.name}
             </h3>
             <div className="mt-2 flex flex-wrap gap-[6px]">
               {club.tags.map((tag) => (
-                <TagChip key={tag} tag={tag} />
+                <TagChip key={tag} tag={tag} size="md" />
               ))}
             </div>
           </div>
         </div>
 
-        <p className="text-[0.875rem] leading-relaxed text-[var(--text-muted)] line-clamp-2">
-          {club.shortDescription}
+        <p className="text-[0.9375rem] leading-relaxed text-[var(--text-muted)]">
+          {truncateText(club.description, 140)}
         </p>
 
-        <div className="mt-auto flex items-center justify-between border-t pt-3" style={{ borderColor: "var(--border)" }}>
-          <MeetingDaysRow days={club.meetingDays} />
-          <CommitmentIndicator level={club.commitmentLevel} showLabel={false} />
+        <div className="mt-auto flex items-center justify-between border-t pt-4" style={{ borderColor: "var(--border)" }}>
+          <MeetingDaysRow days={club.meetingDays} size="md" />
+          <CommitmentIndicator level={club.commitmentLevel} showLabel={false} size="md" />
         </div>
       </motion.article>
     </Link>

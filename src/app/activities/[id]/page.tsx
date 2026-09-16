@@ -1,19 +1,20 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ClubDetailContent from "@/components/ClubDetailContent";
-import { CLUBS, getClubBySlug } from "@/data/clubs";
+import { getClubs, getClubById } from "@/lib/clubs";
 
-export function generateStaticParams() {
-  return CLUBS.map((club) => ({ slug: club.slug }));
+export async function generateStaticParams() {
+  const clubs = await getClubs();
+  return clubs.map((club) => ({ id: club.id }));
 }
 
 export default async function ClubPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ id: string }>;
 }) {
-  const { slug } = await params;
-  const club = getClubBySlug(slug);
+  const { id } = await params;
+  const club = await getClubById(id);
 
   if (!club) {
     notFound();

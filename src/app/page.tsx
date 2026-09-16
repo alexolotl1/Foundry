@@ -2,11 +2,12 @@ import Link from "next/link";
 import GoogleSignInButton from "@/components/GoogleSignInButton";
 import ClubLogo from "@/components/ClubLogo";
 import TagChip from "@/components/TagChip";
-import { CLUBS } from "@/data/clubs";
+import { getClubs } from "@/lib/clubs";
 
-const PREVIEW = CLUBS.slice(0, 3);
+export default async function HomePage() {
+  const clubs = await getClubs();
+  const preview = clubs.slice(0, 3);
 
-export default function HomePage() {
   return (
     <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-16 px-6 py-16 lg:grid-cols-[minmax(0,1fr)_420px] lg:py-24">
       <div className="flex max-w-[560px] flex-col gap-8">
@@ -43,10 +44,10 @@ export default function HomePage() {
 
       <div className="flex flex-col gap-3">
         <p className="text-[0.8125rem] font-medium" style={{ color: "var(--text-faint)" }}>
-          {CLUBS.length} clubs listed this year
+          {clubs.length} clubs listed this year
         </p>
         <div className="flex flex-col gap-3">
-          {PREVIEW.map((club) => (
+          {preview.map((club) => (
             <div
               key={club.id}
               className="flex gap-4 rounded-[4px] p-3"

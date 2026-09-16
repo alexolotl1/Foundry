@@ -1,7 +1,9 @@
 import ActivitiesExplorer from "@/components/ActivitiesExplorer";
-import { CLUBS } from "@/data/clubs";
+import { getClubs } from "@/lib/clubs";
 
-export default function ActivitiesPage() {
+export default async function ActivitiesPage() {
+  const clubs = await getClubs();
+
   return (
     <div className="mx-auto max-w-[1200px] px-6 py-12">
       <div className="mb-8 flex flex-col gap-2">
@@ -16,7 +18,7 @@ export default function ActivitiesPage() {
           by category. Click any club for its full page.
         </p>
       </div>
-      <ActivitiesExplorer clubs={CLUBS} />
+      <ActivitiesExplorer clubs={clubs} />
     </div>
   );
 }

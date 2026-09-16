@@ -1,4 +1,9 @@
+"use client";
+
+import { useState } from "react";
 import type { Club } from "@/types/club";
+
+const EXTENSIONS = ["png", "jpg", "jpeg", "svg", "webp"];
 
 function initialsFor(name: string): string {
   const words = name.split(" ").filter((w) => /[A-Za-z]/.test(w[0] ?? ""));
@@ -7,48 +12,57 @@ function initialsFor(name: string): string {
 }
 
 /**
- * Square club "logo" slot. Renders the real uploaded logo when a club has
- * one; otherwise falls back to a generated monogram so the grid never shows
- * a broken image while clubs are still mock data.
+ * Square club "logo" slot. The generated monogram is always rendered as a
+ * base layer; a real file at /logos/<id>.<ext> (tried in turn across common
+ * extensions) fades in on top of it if one loads. Kept invisible (never the
+ * browser's broken-image icon) while attempts are still in flight or have
+ * all failed, so most clubs — which don't have a logo file yet — never show
+ * a flash of broken UI.
  */
 export default function ClubLogo({ club, className = "" }: { club: Club; className?: string }) {
-  if (club.logoUrl) {
-    return (
-      // Club logos will come from arbitrary URLs once real uploads exist,
-      // so next/image's domain allowlist doesn't apply — plain <img> is fine
-      // for a small avatar-sized asset.
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={club.logoUrl}
-        alt={`${club.name} logo`}
-        className={`block h-full w-full object-cover ${className}`}
-      />
-    );
-  }
-
+  const [extIndex, setExtIndex] = useState(0);
+  const [loaded, setLoaded] = useState(false);
+  const stillTrying = extIndex < EXTENSIONS.length;
   const initials = initialsFor(club.name);
 
   return (
-    <svg
-      viewBox="0 0 120 120"
-      role="img"
-      aria-label={`${club.name} placeholder logo`}
-      className={`block h-full w-full ${className}`}
-    >
-      <rect x="0" y="0" width="120" height="120" fill="var(--surface-2)" />
-      <circle cx="60" cy="60" r="46" fill="none" stroke="var(--border-strong)" strokeWidth="1" strokeOpacity="0.6" />
-      <text
-        x="50%"
-        y="53%"
-        dominantBaseline="middle"
-        textAnchor="middle"
-        fontFamily="var(--font-display)"
-        fontSize="40"
-        fontWeight="600"
-        fill="var(--gold)"
+    <div className={`relative h-full w-full ${className}`}>
+      <svg
+        viewBox="0 0 120 120"
+        role="img"
+        aria-label={`${club.name} logo`}
+        className="absolute inset-0 block h-full w-full"
       >
-        {initials}
-      </text>
-    </svg>
+        <rect x="0" y="0" width="120" height="120" fill="var(--surface-2)" />
+        <circle cx="60" cy="60" r="46" fill="none" stroke="var(--border-strong)" strokeWidth="1" strokeOpacity="0.6" />
+        <text
+          x="50%"
+          y="53%"
+          dominantBaseline="middle"
+          textAnchor="middle"
+          fontFamily="var(--font-display)"
+          fontSize="40"
+          fontWeight="600"
+          fill="var(--gold)"
+        >
+          {initials}
+        </text>
+      </svg>
+
+      {stillTrying && (
+        // Arbitrary /logos/ files, not a next/image-managed asset set.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          key={extIndex}
+          src={`/logos/${club.id}.${EXTENSIONS[extIndex]}`}
+          alt=""
+          aria-hidden="true"
+          onLoad={() => setLoaded(true)}
+          onError={() => setExtIndex((i) => i + 1)}
+          className="absolute inset-0 block h-full w-full object-cover transition-opacity duration-200"
+          style={{ opacity: loaded ? 1 : 0 }}
+        />
+      )}
+    </div>
   );
 }
