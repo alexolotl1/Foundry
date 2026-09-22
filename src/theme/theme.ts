@@ -1,16 +1,17 @@
 import { createTheme } from "@mui/material/styles";
 
-export const tokens = {
-  bg: "#0e1621",
-  surface: "#15202c",
-  surface2: "#1b2836",
-  border: "#28394a",
-  borderStrong: "#3d5570",
-  text: "#e8edf3",
-  textMuted: "#96a7b8",
-  textFaint: "#5e7185",
-  gold: "#d9a354",
-  goldSoft: "#8c723f",
+// MUI's color utilities (alpha/lighten/darken) parse these and choke on
+// var(...) strings, so they stay real hex matching the default (deep-blue)
+// palette. CssBaseline's body background is overridden by the higher-
+// specificity `html body` rule in globals.css, which does track the
+// CSS variables — see the comment there for how ThemeSwitcher stays in sync.
+const tokens = {
+  bg: "#012248",
+  surface: "#0e3a72",
+  text: "#e2e7ee",
+  textMuted: "#b9c5d8",
+  gold: "#dfae00",
+  border: "#2c5b96",
 };
 
 export const theme = createTheme({
@@ -26,7 +27,7 @@ export const theme = createTheme({
     },
     primary: {
       main: tokens.gold,
-      contrastText: "#14100a",
+      contrastText: tokens.bg,
     },
     divider: tokens.border,
   },

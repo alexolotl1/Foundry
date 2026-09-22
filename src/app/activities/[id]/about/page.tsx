@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
-import ClubOverview from "@/components/ClubOverview";
+import ClubAbout from "@/components/ClubAbout";
 import { getClubById } from "@/lib/clubs";
 
-export default async function ClubOverviewPage({
+export default async function ClubAboutPage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -14,5 +14,5 @@ export default async function ClubOverviewPage({
     notFound();
   }
 
-  return <ClubOverview club={club} />;
+  return <ClubAbout club={club} />;
 }

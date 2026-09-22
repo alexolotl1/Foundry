@@ -1,13 +1,6 @@
 export type CommitmentLevel = "low" | "medium" | "high";
 
-export type Weekday =
-  | "Sunday"
-  | "Monday"
-  | "Tuesday"
-  | "Wednesday"
-  | "Thursday"
-  | "Friday"
-  | "Saturday";
+export type Weekday = "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday";
 
 export type Tag =
   | "Arts & Crafts"
@@ -27,9 +20,15 @@ export interface Club {
   tags: Tag[];
   meetingDays: Weekday[];
   commitmentLevel: CommitmentLevel;
-  room: string;
+  /** One or more rooms (a `;`-separated list in the `room` column). */
+  rooms: string[];
   advisor: string;
   keywords?: string[];
   /** Raw URLs, shown as-is on the club page. Empty/absent means no links yet. */
   links?: string[];
+  /** Sign-up form (e.g. a Google Form) for the club's email list. */
+  joinLink?: string;
+  /** About-page answers — blank until the club fills them in. */
+  meetingsLookLike?: string;
+  whatMakesUnique?: string;
 }

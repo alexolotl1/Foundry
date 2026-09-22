@@ -30,7 +30,7 @@ export default function MeetingDaysRow({
               height: box,
               fontSize: font,
               background: active ? "var(--gold)" : "transparent",
-              color: active ? "#14100a" : "var(--text-faint)",
+              color: active ? "var(--gold-contrast)" : "var(--text-faint)",
               border: active ? "none" : "1px solid var(--border)",
             }}
           >

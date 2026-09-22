@@ -3,6 +3,7 @@ import { Fraunces, Public_Sans } from "next/font/google";
 import ThemeRegistry from "@/theme/ThemeRegistry";
 import Header from "@/components/Header";
 import PageTransition from "@/components/PageTransition";
+import ThemeSync from "@/components/ThemeSync";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -26,8 +27,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${publicSans.variable} h-full`}>
+    <html
+      lang="en"
+      className={`${fraunces.variable} ${publicSans.variable} h-full`}
+      suppressHydrationWarning
+    >
       <body className="min-h-full flex flex-col">
+        <ThemeSync />
         <ThemeRegistry>
           <Header />
           <main className="flex-1">

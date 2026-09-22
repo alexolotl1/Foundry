@@ -13,23 +13,29 @@ export default function Header() {
   const pathname = usePathname();
 
   return (
-    <header style={{ background: "var(--surface)", borderBottom: "1px solid var(--border)" }}>
-      <div className="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-4">
-        <Link href="/" className="flex items-baseline gap-2 no-underline">
+    <header
+      style={{
+        height: "var(--header-h)",
+        background: "var(--surface)",
+        borderBottom: "1px solid var(--border)",
+      }}
+    >
+      <div className="page-width flex h-full items-center justify-between">
+        <Link href="/" className="flex items-baseline gap-3 no-underline">
           <motion.span
             whileHover={{ x: 1 }}
             transition={{ duration: 0.15 }}
-            className="text-[1.375rem] font-semibold tracking-tight"
+            className="text-[1.875rem] font-semibold tracking-tight"
             style={{ fontFamily: "var(--font-display)", color: "var(--text)" }}
           >
             Foundry
           </motion.span>
-          <span className="text-[0.8125rem] font-medium" style={{ color: "var(--text-faint)" }}>
+          <span className="hidden text-[0.9375rem] font-medium sm:inline" style={{ color: "var(--text-faint)" }}>
             Clubs &amp; Activities
           </span>
         </Link>
 
-        <nav className="flex items-center gap-6">
+        <nav className="flex items-center gap-8">
           {NAV_LINKS.map((link) => {
             const isActive =
               link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
@@ -37,7 +43,7 @@ export default function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="relative py-1 text-[0.9375rem] font-medium no-underline"
+                className="relative py-1 text-[1.0625rem] font-medium no-underline"
               >
                 <motion.span
                   whileHover={{ y: -1 }}
@@ -53,7 +59,7 @@ export default function Header() {
                   <motion.span
                     layoutId="nav-underline"
                     transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                    className="absolute -bottom-[13px] left-0 right-0 h-[2px]"
+                    className="absolute -bottom-[21px] left-0 right-0 h-[3px]"
                     style={{ background: "var(--gold)" }}
                   />
                 )}

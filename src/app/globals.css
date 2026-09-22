@@ -1,6 +1,42 @@
 @import "tailwindcss";
 
 :root {
+  --bg: #012248;
+  --surface: #0e3a72;
+  --surface-2: #17498c;
+  --border: #2c5b96;
+  --border-strong: #6096d1;
+  --text: #e2e7ee;
+  --text-muted: #b9c5d8;
+  --text-faint: #9db0cb;
+
+  --gold: #dfae00;
+  --gold-soft: #9a7a00;
+  --gold-contrast: #012248;
+
+  --status-low: #3dcb8b;
+  --status-medium: #f2903a;
+  --status-high: #f0665a;
+
+  /* Section accents on club pages (gold is the fifth). */
+  --tone-sky: #84c3ff;
+  --tone-mint: #5ddcbb;
+  --tone-violet: #c0b4ff;
+  --tone-silver: #cfd8e6;
+
+  --page-max: 1300px;
+  --club-max: 1100px;
+  --header-h: 80px;
+  --sidebar-w: 230px;
+
+  --font-display: var(--font-fraunces);
+  --font-body: var(--font-public-sans);
+}
+
+/* Alternate palettes for the theme-preview popup (ThemeSwitcher). "old"
+   matches the original build, "mix" is a grayer/whiter blend of both. Safe
+   to delete this block and ThemeSwitcher together once a palette is final. */
+:root[data-theme="old"] {
   --bg: #0e1621;
   --surface: #15202c;
   --surface-2: #1b2836;
@@ -18,8 +54,34 @@
   --status-medium: #d9973d;
   --status-high: #cf5a4c;
 
-  --font-display: var(--font-fraunces);
-  --font-body: var(--font-public-sans);
+  --tone-sky: #6fa8dc;
+  --tone-mint: #4fa66b;
+  --tone-violet: #a693c9;
+  --tone-silver: #96a7b8;
+}
+
+:root[data-theme="mix"] {
+  --bg: #16202c;
+  --surface: #202e3d;
+  --surface-2: #2a3c4e;
+  --border: #3c4f63;
+  --border-strong: #5c7690;
+  --text: #eef2f6;
+  --text-muted: #b7c4d1;
+  --text-faint: #8496a8;
+
+  --gold: #e7b93a;
+  --gold-soft: #a3841f;
+  --gold-contrast: #16202c;
+
+  --status-low: #46b98a;
+  --status-medium: #e2903f;
+  --status-high: #dd6857;
+
+  --tone-sky: #7fb3e0;
+  --tone-mint: #5bc9a8;
+  --tone-violet: #ab9fd6;
+  --tone-silver: #c7d0da;
 }
 
 @theme inline {
@@ -36,6 +98,24 @@
   --font-body: var(--font-body);
 }
 
+@utility page-width {
+  margin-inline: auto;
+  max-width: var(--page-max);
+  padding-inline: 2rem;
+}
+
+@utility club-layout {
+  padding-inline: 2rem;
+
+  @media (min-width: 1024px) {
+    display: grid;
+    grid-template-columns:
+      minmax(calc(var(--sidebar-w) + 1.5rem), 1fr)
+      minmax(0, var(--club-max))
+      minmax(0, 1fr);
+  }
+}
+
 * {
   box-sizing: border-box;
 }
@@ -45,12 +125,13 @@ html {
   color-scheme: dark;
 }
 
-body {
+html body {
   min-height: 100%;
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-body), "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 ::selection {

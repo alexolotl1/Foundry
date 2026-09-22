@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { motion } from "motion/react";
 import ClubCard from "./ClubCard";
 import TagChip from "./TagChip";
@@ -21,6 +21,17 @@ function useToggle<T>() {
     setActive((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]));
   }
   return [active, toggle] as const;
+}
+
+function FilterGroup({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="flex flex-col gap-2.5">
+      <span className="text-[0.9375rem] font-semibold" style={{ color: "var(--text)" }}>
+        {label}
+      </span>
+      <div className="flex flex-wrap gap-2">{children}</div>
+    </div>
+  );
 }
 
 export default function ActivitiesExplorer({ clubs }: { clubs: Club[] }) {
@@ -53,7 +64,12 @@ export default function ActivitiesExplorer({ clubs }: { clubs: Club[] }) {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-4">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+        className="flex flex-col gap-4"
+      >
         <input
           type="search"
           value={query}
@@ -67,8 +83,8 @@ export default function ActivitiesExplorer({ clubs }: { clubs: Club[] }) {
           }}
         />
 
-        <div className="flex flex-col gap-3">
-          <div className="flex flex-wrap gap-2">
+        <div className="flex flex-col gap-5">
+          <FilterGroup label="Select tags">
             {ALL_TAGS.map((tag) => (
               <motion.button
                 key={tag}
@@ -81,12 +97,9 @@ export default function ActivitiesExplorer({ clubs }: { clubs: Club[] }) {
                 <TagChip tag={tag} active={activeTags.includes(tag)} size="md" />
               </motion.button>
             ))}
-          </div>
+          </FilterGroup>
 
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[0.75rem]" style={{ color: "var(--text-faint)" }}>
-              Meeting day
-            </span>
+          <FilterGroup label="Meeting days">
             {WEEKDAYS.map((day) => (
               <motion.button
                 key={day}
@@ -96,13 +109,12 @@ export default function ActivitiesExplorer({ clubs }: { clubs: Club[] }) {
                 className="cursor-pointer border-none bg-transparent p-0"
                 aria-pressed={activeDays.includes(day)}
               >
-                <FilterChip label={day.slice(0, 3)} active={activeDays.includes(day)} />
+                <FilterChip label={day} active={activeDays.includes(day)} size="md" />
               </motion.button>
             ))}
+          </FilterGroup>
 
-            <span className="ml-3 text-[0.75rem]" style={{ color: "var(--text-faint)" }}>
-              Commitment
-            </span>
+          <FilterGroup label="Commitment level">
             {COMMITMENT_LEVELS.map(({ value, label }) => (
               <motion.button
                 key={value}
@@ -112,12 +124,12 @@ export default function ActivitiesExplorer({ clubs }: { clubs: Club[] }) {
                 className="cursor-pointer border-none bg-transparent p-0"
                 aria-pressed={activeCommitments.includes(value)}
               >
-                <FilterChip label={label} active={activeCommitments.includes(value)} />
+                <FilterChip label={label} active={activeCommitments.includes(value)} size="md" />
               </motion.button>
             ))}
-          </div>
+          </FilterGroup>
         </div>
-      </div>
+      </motion.div>
 
       <p className="text-[0.8125rem]" style={{ color: "var(--text-faint)" }}>
         {filtered.length} of {clubs.length} clubs
@@ -125,8 +137,8 @@ export default function ActivitiesExplorer({ clubs }: { clubs: Club[] }) {
 
       {filtered.length > 0 ? (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((club) => (
-            <ClubCard key={club.id} club={club} />
+          {filtered.map((club, index) => (
+            <ClubCard key={club.id} club={club} index={index} />
           ))}
         </div>
       ) : (
