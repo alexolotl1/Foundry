@@ -1,11 +1,11 @@
-export type ThemeId = "old" | "deep" | "mix";
+export type ThemeId = "deep" | "mix";
 
 export const THEME_STORAGE_KEY = "foundry-theme-demo";
 
 export function getSavedTheme(): ThemeId {
   try {
     const saved = localStorage.getItem(THEME_STORAGE_KEY);
-    if (saved === "old" || saved === "mix") return saved;
+    if (saved === "mix") return saved;
   } catch {
     // ignore — private browsing, etc.
   }

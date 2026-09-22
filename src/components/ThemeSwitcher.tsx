@@ -13,12 +13,6 @@ const THEMES: {
   swatches: string[];
 }[] = [
   {
-    id: "old",
-    label: "Original",
-    blurb: "The site's first look — navy and warm gold.",
-    swatches: ["#0e1621", "#15202c", "#d9a354"],
-  },
-  {
     id: "deep",
     label: "Deep blue",
     blurb: "What's live now — richer blues, bright gold.",
@@ -27,7 +21,7 @@ const THEMES: {
   {
     id: "mix",
     label: "Slate mix",
-    blurb: "A grayer, whiter blend of both, still blue-leaning.",
+    blurb: "A grayer, whiter blend, still blue-leaning.",
     swatches: ["#16202c", "#202e3d", "#e7b93a"],
   },
 ];

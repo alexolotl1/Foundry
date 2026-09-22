@@ -18,7 +18,6 @@
   --status-medium: #f2903a;
   --status-high: #f0665a;
 
-  /* Section accents on club pages (gold is the fifth). */
   --tone-sky: #84c3ff;
   --tone-mint: #5ddcbb;
   --tone-violet: #c0b4ff;
@@ -33,33 +32,9 @@
   --font-body: var(--font-public-sans);
 }
 
-/* Alternate palettes for the theme-preview popup (ThemeSwitcher). "old"
-   matches the original build, "mix" is a grayer/whiter blend of both. Safe
-   to delete this block and ThemeSwitcher together once a palette is final. */
-:root[data-theme="old"] {
-  --bg: #0e1621;
-  --surface: #15202c;
-  --surface-2: #1b2836;
-  --border: #28394a;
-  --border-strong: #3d5570;
-  --text: #e8edf3;
-  --text-muted: #96a7b8;
-  --text-faint: #5e7185;
-
-  --gold: #d9a354;
-  --gold-soft: #8c723f;
-  --gold-contrast: #14100a;
-
-  --status-low: #4fa66b;
-  --status-medium: #d9973d;
-  --status-high: #cf5a4c;
-
-  --tone-sky: #6fa8dc;
-  --tone-mint: #4fa66b;
-  --tone-violet: #a693c9;
-  --tone-silver: #96a7b8;
-}
-
+/* Alternate palette for the theme-preview popup (ThemeSwitcher) — a grayer,
+   whiter blend of the base deep-blue palette. Safe to delete this block and
+   ThemeSwitcher together once a palette is final. */
 :root[data-theme="mix"] {
   --bg: #16202c;
   --surface: #202e3d;
