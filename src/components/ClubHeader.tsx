@@ -34,7 +34,7 @@ export default function ClubHeader({ club }: { club: Club }) {
         </div>
       </div>
 
-      <div className="w-full lg:w-[380px] lg:shrink-0">
+      <div className="w-full lg:w-[280px] lg:shrink-0">
         <ClubLinksBox links={club.links} />
       </div>
     </div>

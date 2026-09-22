@@ -25,26 +25,22 @@ function Answer({ text }: { text?: string }) {
 export default function ClubAbout({ club }: { club: Club }) {
   return (
     <div className="flex flex-col gap-8">
-      <SectionBox
-        icon={<InfoOutlinedIcon sx={{ fontSize: 22 }} />}
-        title="What is this activity?"
-        tone="gold"
-      >
+      <SectionBox icon={<InfoOutlinedIcon sx={{ fontSize: 20 }} />} title="What is this activity?" shade="surface">
         <Answer text={club.description} />
       </SectionBox>
 
       <SectionBox
-        icon={<ForumOutlinedIcon sx={{ fontSize: 22 }} />}
+        icon={<ForumOutlinedIcon sx={{ fontSize: 20 }} />}
         title="What do your meetings look like?"
-        tone="sky"
+        shade="surface-2"
       >
         <Answer text={club.meetingsLookLike} />
       </SectionBox>
 
       <SectionBox
-        icon={<LightbulbOutlinedIcon sx={{ fontSize: 22 }} />}
+        icon={<LightbulbOutlinedIcon sx={{ fontSize: 20 }} />}
         title="What makes this activity unique?"
-        tone="mint"
+        shade="surface"
       >
         <Answer text={club.whatMakesUnique} />
       </SectionBox>

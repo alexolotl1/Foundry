@@ -36,20 +36,6 @@ function StatItem({ icon, label, children }: { icon: ReactNode; label: string; c
   );
 }
 
-function SectionHeading({ icon, children }: { icon: ReactNode; children: ReactNode }) {
-  return (
-    <h2
-      className="flex items-center gap-2 text-[1.25rem] font-semibold"
-      style={{ fontFamily: "var(--font-display)", color: "var(--text)" }}
-    >
-      <span className="flex" style={{ color: "var(--gold)" }}>
-        {icon}
-      </span>
-      {children}
-    </h2>
-  );
-}
-
 export default function ClubOverview({ club }: { club: Club }) {
   const rooms = club.rooms.length > 0 ? club.rooms.join(", ") : "Not listed yet";
 
@@ -78,13 +64,21 @@ export default function ClubOverview({ club }: { club: Club }) {
       <div className="grid grid-cols-1 gap-x-14 gap-y-10 lg:grid-cols-[1fr_300px]">
         <div className="flex flex-col gap-10">
           <section className="flex flex-col gap-3">
-            <SectionHeading icon={<NotesOutlinedIcon sx={{ fontSize: 20 }} />}>Description</SectionHeading>
+            <h2
+              className="flex items-center gap-2 text-[1.25rem] font-semibold"
+              style={{ fontFamily: "var(--font-display)", color: "var(--text)" }}
+            >
+              <span className="flex" style={{ color: "var(--gold)" }}>
+                <NotesOutlinedIcon sx={{ fontSize: 20 }} />
+              </span>
+              Description
+            </h2>
             <p className="max-w-[70ch] text-[1rem] leading-relaxed" style={{ color: "var(--text-muted)" }}>
               {club.description}
             </p>
           </section>
 
-          <SectionBox icon={<EventOutlinedIcon sx={{ fontSize: 18 }} />} title="Meeting details" tone="sky">
+          <SectionBox icon={<EventOutlinedIcon sx={{ fontSize: 18 }} />} title="Meeting details" shade="surface">
             <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <dt className="text-[0.75rem]" style={{ color: "var(--text-faint)" }}>
@@ -113,7 +107,7 @@ export default function ClubOverview({ club }: { club: Club }) {
             </dl>
           </SectionBox>
 
-          <SectionBox icon={<GroupsOutlinedIcon sx={{ fontSize: 18 }} />} title="Leadership" tone="silver">
+          <SectionBox icon={<GroupsOutlinedIcon sx={{ fontSize: 18 }} />} title="Leadership" shade="surface-2">
             <p className="text-[0.9375rem]" style={{ color: "var(--text)" }}>
               Faculty advisor: {club.advisor}
             </p>
@@ -126,7 +120,7 @@ export default function ClubOverview({ club }: { club: Club }) {
 
         <aside>
           <div className="lg:sticky lg:top-24">
-            <SectionBox icon={<HowToRegOutlinedIcon sx={{ fontSize: 18 }} />} title="How to join" tone="mint">
+            <SectionBox icon={<HowToRegOutlinedIcon sx={{ fontSize: 18 }} />} title="How to join" shade="none" dashed>
               {club.joinLink ? (
                 <div className="flex flex-col gap-4">
                   <p className="text-[0.9375rem] leading-relaxed" style={{ color: "var(--text-muted)" }}>
