@@ -13,6 +13,7 @@ import type { Club } from "@/types/club";
 import CommitmentIndicator from "./CommitmentIndicator";
 import MeetingDaysRow from "./MeetingDaysRow";
 import SectionBox from "./SectionBox";
+import { truncateText } from "@/lib/truncate";
 
 const COMMITMENT_COPY: Record<Club["commitmentLevel"], string> = {
   low: "Drop in when you can — attendance isn't tracked closely.",
@@ -38,6 +39,9 @@ function StatItem({ icon, label, children }: { icon: ReactNode; label: string; c
 
 export default function ClubOverview({ club }: { club: Club }) {
   const rooms = club.rooms.length > 0 ? club.rooms.join(", ") : "Not listed yet";
+  const whatToExpect = club.meetingsLookLike
+    ? truncateText(club.meetingsLookLike, 140)
+    : COMMITMENT_COPY[club.commitmentLevel];
 
   return (
     <div className="flex flex-col gap-10">
@@ -101,7 +105,7 @@ export default function ClubOverview({ club }: { club: Club }) {
                   What to expect
                 </dt>
                 <dd className="mt-1 text-[0.9375rem]" style={{ color: "var(--text)" }}>
-                  {COMMITMENT_COPY[club.commitmentLevel]}
+                  {whatToExpect}
                 </dd>
               </div>
             </dl>

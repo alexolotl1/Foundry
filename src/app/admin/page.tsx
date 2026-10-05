@@ -1,25 +1,34 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { readAdminSessionToken, ADMIN_SESSION_COOKIE } from "@/lib/session";
+import { listSubmissions, getSubmission, type SubmissionDetail } from "@/lib/submissions";
 import { getClubById } from "@/lib/clubs";
-import { readSessionToken, SESSION_COOKIE } from "@/lib/session";
-import AdminWizard from "@/components/admin/AdminWizard";
+import type { Club } from "@/types/club";
+import AdminReviewDashboard, { type SubmissionEntry } from "@/components/admin-review/AdminReviewDashboard";
 
-export default async function AdminPage() {
+export default async function AdminReviewPage() {
   const store = await cookies();
-  const clubId = readSessionToken(store.get(SESSION_COOKIE)?.value);
-
-  if (!clubId) {
-    redirect("/login");
+  if (!readAdminSessionToken(store.get(ADMIN_SESSION_COOKIE)?.value)) {
+    redirect("/admin/login");
   }
 
-  const club = await getClubById(clubId);
-  if (!club) {
-    redirect("/login");
-  }
+  const items = await listSubmissions();
+
+  const entries = await Promise.all(
+    items.map(async (item) => {
+      const [submission, baseClub] = await Promise.all([getSubmission(item.clubId), getClubById(item.clubId)]);
+      return { clubName: item.clubName, submittedAt: item.submittedAt, submission, baseClub };
+    })
+  );
+
+  const valid: SubmissionEntry[] = entries.filter(
+    (e): e is { clubName: string; submittedAt: string; submission: SubmissionDetail; baseClub: Club } =>
+      Boolean(e.submission && e.baseClub)
+  );
 
   return (
-    <div className="page-width flex flex-col gap-8 py-10">
-      <AdminWizard club={club} />
+    <div className="page-width py-10">
+      <AdminReviewDashboard entries={valid} />
     </div>
   );
 }

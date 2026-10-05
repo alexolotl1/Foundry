@@ -11,19 +11,12 @@ function initialsFor(name: string): string {
   return letters.join("") || name.slice(0, 2).toUpperCase();
 }
 
-/**
- * Square club "logo" slot. The generated monogram is always rendered as a
- * base layer; a real file at /logos/<id>.<ext> (tried in turn across common
- * extensions) fades in on top of it if one loads. Kept invisible (never the
- * browser's broken-image icon) while attempts are still in flight or have
- * all failed, so most clubs — which don't have a logo file yet — never show
- * a flash of broken UI.
- */
 export default function ClubLogo({ club, className = "" }: { club: Club; className?: string }) {
   const [extIndex, setExtIndex] = useState(0);
   const [loaded, setLoaded] = useState(false);
-  const stillTrying = extIndex < EXTENSIONS.length;
   const initials = initialsFor(club.name);
+
+  const src = club.logoUrl || (extIndex < EXTENSIONS.length ? `/logos/${club.id}.${EXTENSIONS[extIndex]}` : null);
 
   return (
     <div className={`relative h-full w-full ${className}`}>
@@ -49,16 +42,17 @@ export default function ClubLogo({ club, className = "" }: { club: Club; classNa
         </text>
       </svg>
 
-      {stillTrying && (
-        // Arbitrary /logos/ files, not a next/image-managed asset set.
+      {src && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          key={extIndex}
-          src={`/logos/${club.id}.${EXTENSIONS[extIndex]}`}
+          key={src}
+          src={src}
           alt=""
           aria-hidden="true"
           onLoad={() => setLoaded(true)}
-          onError={() => setExtIndex((i) => i + 1)}
+          onError={() => {
+            if (!club.logoUrl) setExtIndex((i) => i + 1);
+          }}
           className="absolute inset-0 block h-full w-full object-cover transition-opacity duration-200"
           style={{ opacity: loaded ? 1 : 0 }}
         />

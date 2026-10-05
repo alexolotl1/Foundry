@@ -31,9 +31,6 @@ export default function ThemeSwitcher() {
   const [active, setActive] = useState<ThemeId>("deep");
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // ThemeSync (mounted in the root layout) is what actually applies the
-  // saved theme on every page load; this just mirrors that choice into the
-  // picker's own UI state.
   useEffect(() => {
     setActive(getSavedTheme());
   }, []);

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import type { Club, CommitmentLevel, Tag, Weekday } from "@/types/club";
 import { ALL_TAGS } from "@/data/tags";
 import { WEEKDAYS } from "@/data/weekdays";
@@ -13,6 +14,11 @@ import FilterChip from "@/components/FilterChip";
 import ClubHeader from "@/components/ClubHeader";
 import ClubOverview from "@/components/ClubOverview";
 import ClubAbout from "@/components/ClubAbout";
+import ClubLogo from "@/components/ClubLogo";
+import SubmitSuccessModal from "@/components/admin/SubmitSuccessModal";
+
+const MAX_LOGO_BYTES = 4 * 1024 * 1024;
+const ALLOWED_LOGO_TYPES = ["image/png", "image/jpeg", "image/webp", "image/gif"];
 
 const COMMITMENT_LEVELS: { value: CommitmentLevel; label: string }[] = [
   { value: "low", label: "Low" },
@@ -23,6 +29,7 @@ const COMMITMENT_LEVELS: { value: CommitmentLevel; label: string }[] = [
 const STEPS = ["Overview details", "Answer a few questions", "Preview & submit"] as const;
 
 interface FormState {
+  logoUrl: string;
   description: string;
   tags: Tag[];
   meetingDays: Weekday[];
@@ -40,6 +47,7 @@ interface FormState {
 function initialState(club: Club): FormState {
   const [link1 = "", link2 = "", link3 = ""] = club.links ?? [];
   return {
+    logoUrl: club.logoUrl ?? "",
     description: club.description,
     tags: club.tags,
     meetingDays: club.meetingDays,
@@ -93,9 +101,47 @@ export default function AdminWizard({ club }: { club: Club }) {
   const [submitting, setSubmitting] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [logoError, setLogoError] = useState<string | null>(null);
 
   function set<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((f) => ({ ...f, [key]: value }));
+  }
+
+  async function handleLogoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+
+    setLogoError(null);
+
+    if (!ALLOWED_LOGO_TYPES.includes(file.type)) {
+      setLogoError("That doesn't look like an image. Use PNG, JPG, WEBP, or GIF.");
+      return;
+    }
+    if (file.size > MAX_LOGO_BYTES) {
+      setLogoError("That image is too big — keep it under 4MB.");
+      return;
+    }
+
+    setUploadingLogo(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/admin/upload-logo", { method: "POST", body: formData });
+      const body = await res.json();
+
+      if (!res.ok) {
+        setLogoError(body.error ?? "Upload failed.");
+        return;
+      }
+
+      set("logoUrl", body.url);
+    } catch {
+      setLogoError("Couldn't reach the server. Try again.");
+    } finally {
+      setUploadingLogo(false);
+    }
   }
 
   function toggleTag(tag: Tag) {
@@ -116,6 +162,7 @@ export default function AdminWizard({ club }: { club: Club }) {
 
   const previewClub: Club = {
     ...club,
+    logoUrl: form.logoUrl || club.logoUrl,
     description: form.description,
     tags: form.tags,
     meetingDays: form.meetingDays,
@@ -140,6 +187,7 @@ export default function AdminWizard({ club }: { club: Club }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          logoUrl: form.logoUrl || null,
           description: form.description,
           tags: form.tags,
           meetingDays: form.meetingDays,
@@ -173,6 +221,11 @@ export default function AdminWizard({ club }: { club: Club }) {
     await fetch("/api/logout", { method: "POST" });
     router.push("/login");
     router.refresh();
+  }
+
+  async function handleBackToLogin() {
+    setSaved(false);
+    await handleLogout();
   }
 
   return (
@@ -233,6 +286,42 @@ export default function AdminWizard({ club }: { club: Club }) {
       >
         {step === 0 && (
           <div className="flex flex-col gap-7">
+            <Field label="Club logo" hint="PNG, JPG, WEBP, or GIF — up to 4MB.">
+              <div className="flex items-center gap-4">
+                <div
+                  className="h-20 w-20 shrink-0 overflow-hidden rounded-[4px]"
+                  style={{ border: "1px solid var(--border)" }}
+                >
+                  <ClubLogo club={{ ...club, logoUrl: form.logoUrl || undefined }} />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label
+                    className="inline-flex w-fit cursor-pointer items-center gap-2 rounded-[3px] px-4 py-2 text-[0.875rem] font-medium"
+                    style={{
+                      border: "1px solid var(--border-strong)",
+                      color: "var(--text)",
+                      opacity: uploadingLogo ? 0.6 : 1,
+                    }}
+                  >
+                    <CloudUploadOutlinedIcon sx={{ fontSize: 18 }} />
+                    {uploadingLogo ? "Uploading…" : form.logoUrl ? "Replace image" : "Upload image"}
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp,image/gif"
+                      className="hidden"
+                      onChange={handleLogoChange}
+                      disabled={uploadingLogo}
+                    />
+                  </label>
+                  {logoError && (
+                    <span className="text-[0.8125rem]" style={{ color: "var(--status-high)" }}>
+                      {logoError}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </Field>
+
             <Field label="Description">
               <textarea
                 value={form.description}
@@ -380,8 +469,8 @@ export default function AdminWizard({ club }: { club: Club }) {
             >
               <InfoOutlinedIcon sx={{ fontSize: 20, color: "var(--gold)" }} />
               <p className="text-[0.875rem]" style={{ color: "var(--text)" }}>
-                This is a demo of what your page would look like — nothing is saved until you
-                submit below.
+                This is a demo of what your page would look like. Submitting sends it for admin
+                review — it won't go live until approved.
               </p>
             </div>
 
@@ -425,18 +514,7 @@ export default function AdminWizard({ club }: { club: Club }) {
         </p>
       )}
 
-      {saved && (
-        <p
-          className="rounded-[3px] px-3.5 py-2.5 text-[0.875rem]"
-          style={{
-            background: "color-mix(in srgb, var(--status-low) 14%, var(--surface))",
-            border: "1px solid color-mix(in srgb, var(--status-low) 45%, var(--border))",
-            color: "var(--text)",
-          }}
-        >
-          Saved! Your club page is up to date.
-        </p>
-      )}
+      <SubmitSuccessModal open={saved} onClose={() => setSaved(false)} onBackToLogin={handleBackToLogin} />
 
       <div className="flex items-center justify-between border-t pt-6" style={{ borderColor: "var(--border)" }}>
         <button
@@ -466,7 +544,7 @@ export default function AdminWizard({ club }: { club: Club }) {
             className="rounded-[3px] px-5 py-2.5 text-[0.9375rem] font-semibold transition-opacity duration-150 disabled:cursor-not-allowed disabled:opacity-60"
             style={{ background: "var(--gold)", color: "var(--gold-contrast)" }}
           >
-            {submitting ? "Submitting…" : "Submit changes"}
+            {submitting ? "Submitting…" : "Submit for review"}
           </button>
         )}
       </div>

@@ -2,9 +2,9 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 
-export default function LoginPage() {
+export default function AdminLoginPage() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -17,7 +17,7 @@ export default function LoginPage() {
     setSubmitting(true);
 
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch("/api/admin-review/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
@@ -30,7 +30,7 @@ export default function LoginPage() {
         return;
       }
 
-      router.push("/dashboard");
+      router.push("/admin");
       router.refresh();
     } catch {
       setError("Couldn't reach the server. Try again.");
@@ -44,20 +44,16 @@ export default function LoginPage() {
         <div className="mb-8 flex flex-col items-center gap-3 text-center">
           <span
             className="flex h-12 w-12 items-center justify-center rounded-full"
-            style={{ background: "color-mix(in srgb, var(--gold) 16%, var(--surface-2))" }}
+            style={{ background: "color-mix(in srgb, var(--tone-violet) 18%, var(--surface-2))" }}
           >
-            <LockOutlinedIcon sx={{ fontSize: 22, color: "var(--gold)" }} />
+            <AdminPanelSettingsOutlinedIcon sx={{ fontSize: 22, color: "var(--tone-violet)" }} />
           </span>
           <h1
             className="text-[1.75rem] font-semibold"
             style={{ fontFamily: "var(--font-display)", color: "var(--text)" }}
           >
-            Club login
+            Review dashboard
           </h1>
-          <p className="max-w-[34ch] text-[0.9375rem] leading-relaxed" style={{ color: "var(--text-muted)" }}>
-            New here? Use the temporary username and password you were given — you'll be asked to
-            set your own right after.
-          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -108,8 +104,8 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="mt-2 w-full rounded-[3px] px-5 py-3 text-[0.9375rem] font-semibold transition-opacity duration-150 disabled:cursor-not-allowed disabled:opacity-60"
-            style={{ background: "var(--gold)", color: "var(--gold-contrast)" }}
+            className="w-full rounded-[3px] px-5 py-3 text-[0.9375rem] font-semibold transition-opacity duration-150 disabled:cursor-not-allowed disabled:opacity-60"
+            style={{ background: "var(--tone-violet)", color: "var(--bg)" }}
           >
             {submitting ? "Signing in…" : "Sign in"}
           </button>

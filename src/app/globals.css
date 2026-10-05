@@ -32,9 +32,6 @@
   --font-body: var(--font-public-sans);
 }
 
-/* Alternate palette for the theme-preview popup (ThemeSwitcher) — a grayer,
-   whiter blend of the base deep-blue palette. Safe to delete this block and
-   ThemeSwitcher together once a palette is final. */
 :root[data-theme="mix"] {
   --bg: #16202c;
   --surface: #202e3d;

@@ -31,4 +31,6 @@ export interface Club {
   /** About-page answers — blank until the club fills them in. */
   meetingsLookLike?: string;
   whatMakesUnique?: string;
+  /** Public URL in the `club-logos` Supabase Storage bucket, if uploaded. */
+  logoUrl?: string;
 }

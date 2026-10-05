@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { updateClubProfile, type ClubProfileInput } from "@/lib/clubs";
+import type { ClubProfileInput } from "@/lib/clubs";
+import { upsertSubmission } from "@/lib/submissions";
 import { readSessionToken, SESSION_COOKIE } from "@/lib/session";
 import { ALL_TAGS } from "@/data/tags";
 import { WEEKDAYS } from "@/data/weekdays";
@@ -46,9 +47,10 @@ export async function POST(request: Request) {
     meetingsLookLike: typeof body.meetingsLookLike === "string" ? body.meetingsLookLike.trim() : "",
     whatMakesUnique: typeof body.whatMakesUnique === "string" ? body.whatMakesUnique.trim() : "",
   };
+  const logoUrl = typeof body.logoUrl === "string" && body.logoUrl ? body.logoUrl : null;
 
   try {
-    await updateClubProfile(clubId, input);
+    await upsertSubmission(clubId, { ...input, logoUrl });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to save changes.";
     return NextResponse.json({ error: message }, { status: 500 });
